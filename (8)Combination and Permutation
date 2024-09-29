@@ -1,0 +1,158 @@
+.data
+str6: .string "\n"
+str1: .string "s1111527\n"
+str2: .string " input number M= "
+str3: .string " input number N= "
+str4: .string "P(M,N):"
+str5: .string "C(M,N):"
+str7: .string "(m^n):"
+str8: .string "H(M,N):"
+str9:.string"P(M,N):1\nC(M,N):1\n(m^n):1\nH(M,N):1\n"
+.text
+main:
+
+       
+  
+    jal printMsg1
+    jal printMsg2
+    jal inputM
+    mv s0, a0       
+    jal printMsg3
+    jal inputN
+    mv s1, a0    
+       
+    # ®æßb…Û®Ó
+    blt s0, x0, invalid_input
+    blt s1, x0, invalid_input
+    beqz s1, s1_is_zero
+    
+    mv a0, s0        
+    jal factorial
+    mv s2, a0
+    sub s3, s0, s1
+    mv a0, s3
+    jal factorial
+    mv s4, a0
+    div s5, s2, s4
+    jal printP
+    jal printn
+    mv a0,s1
+    jal factorial
+    mv s6,a0
+    mul s7,s6,s4
+    div s8,s2,s7
+    jal printC
+    jal printn
+    mv a0,s0
+    jal pow
+    mv s9,a0
+    jal printm
+    jal printn
+    add s10,s0,s1
+    addi s10,s10,-1
+    mv a0,s10
+    jal factorial
+    mv s11,a0
+    addi t3,s0,-1
+    mv a0,t3
+    jal factorial
+    mv t4,a0
+    mul t5,s6,t4
+    div t6,s11,t5
+    jal printH
+    jal printn
+    j end
+ printMsg1:
+	la a0, str1			
+	li a7, 4		
+ 	ecall
+ 	ret
+ printMsg2:
+	la a0, str2			
+	li a7, 4		
+ 	ecall
+ 	ret 	
+ printMsg3:
+	la a0, str3			
+	li a7, 4			
+ 	ecall
+ 	ret 
+ printn:
+        la a0, str6          
+        li a7, 4           
+        ecall
+        ret
+  printP:
+        la a0,str4
+        li a7,4 
+        ecall
+	mv a0, s5			
+	li a7, 1			
+ 	ecall
+ 	ret 
+   printC:
+        la a0,str5
+        li a7,4 
+        ecall
+	mv a0, s8			
+	li a7, 1			
+ 	ecall
+ 	ret 
+printm:
+        la a0,str7
+        li a7,4 
+        ecall
+	mv a0, s9			
+	li a7, 1			
+ 	ecall
+ 	ret 
+printH:
+       la a0,str8
+       li a7,4
+       ecall
+       mv a0, t6
+       li a7,1
+       ecall 
+       ret
+inputM:
+	li a7,5
+	ecall
+	ret 
+inputN:
+	li a7,5
+	ecall
+	ret 
+factorial: 
+	li t0, 1
+	mv t1,a0
+	addi t1,t1,-1
+loop: 
+	bge t0, t1, endfactorial
+	mul a0, a0, t1
+	addi t1, t1, -1
+	jal x0, loop
+endfactorial: 
+	jr ra
+pow: 
+	li t0, 1
+	mv t1,a0
+	mv t2,s1
+loop2: 
+	bge t0, t2, endpow
+	mul a0, a0, t1
+	addi t2, t2, -1
+	jal x0, loop2
+endpow: 
+	jr ra	
+invalid_input:
+        jal end
+s1_is_zero:
+       la a0,str9
+       li a7,4
+       ecall
+       j end
+end:        
+        li       a7, 10
+        ecall
+        
+ 
